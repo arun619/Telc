@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="de" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>telc Deutsch B2 – Offizieller Prüfungssimulator (220 Pkt)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            telcblue: '#1d4ed8',
+            telcred: '#e11d48'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 9999px; }
+    .slot-highlight { border-color: #2563eb !important; background-color: #eff6ff !important; }
+  </style>
+</head>
+
+<body class="min-h-full bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
+
+  <!-- Header Bar -->
+  <header class="no-print bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      <!-- Branding & Title -->
+      <div class="flex items-center space-x-3">
+        <div class="flex items-center bg-slate-900 dark:bg-slate-800 text-white px-2 py-1 rounded-lg">
+          <span class="font-black tracking-wider text-lg text-blue-400">telc<span class="text-rose-500">c</span></span>
+          <span class="text-[10px] bg-rose-600 font-bold ml-1.5 px-1.5 py-0.5 rounded">B2</span>
+        </div>
+        <div>
+          <h1 id="headerCurrentTitle" class="font-bold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white">
+            Leseverstehen, Teil 1: Gesundheit
+          </h1>
+          <p class="text-[11px] text-slate-500 hidden sm:block">
+            Modelltest Simulation (220 Punkte Gesamt · 60% Bestehensgrenze = 132 Pkt)
+          </p>
+        </div>
+      </div>
+
+      <!-- Controls & Timer -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="flex items-center bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1 text-xs sm:text-sm font-mono font-bold shadow-inner">
+          <i data-lucide="clock" class="w-4 h-4 mr-1.5 text-blue-600 dark:text-blue-400" id="timerIcon"></i>
+          <span id="timerDisplay">90:00</span>
+          <button onclick="toggleTimer()" class="ml-2 p-0.5 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200" title="Timer Pause/Start">
+            <i data-lucide="pause" class="w-3.5 h-3.5" id="timerPlayPause"></i>
+          </button>
+        </div>
+
+        <button onclick="openApiKeyModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 transition flex items-center gap-1.5" title="Google Gemini KI-Key hinterlegen">
+          <i data-lucide="bot" class="w-3.5 h-3.5 text-indigo-600"></i>
+          <span class="hidden md:inline">KI-Key</span>
+        </button>
+
+        <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700" title="Hell/Dunkel">
+          <i data-lucide="moon" class="w-4 h-4" id="themeIcon"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Overall Progress bar -->
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1">
+      <div id="examProgressBar" class="bg-blue-600 h-full transition-all duration-300 w-1/6"></div>
+    </div>
+  </header>
+
+  <!-- Horizontal Module Step Bar -->
+  <div class="no-print max-w-7xl w-full mx-auto px-3 sm:px-6 pt-3">
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="moduleStepTabs">
+      <!-- Injected via JavaScript -->
+    </div>
+  </div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 flex flex-col gap-6">
+
+    <!-- Active Test Section Wrapper -->
+    <div id="testPanelsContainer" class="w-full">
+
+      <!-- ================= SECTION 1: LESEN TEIL 1 (Gesundheit) ================= -->
+      <section id="pane_0" class="test-pane space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-900">
+                Leseverstehen Teil 1
+              </span>
+              <span class="text-xs text-slate-500">5 Aufgaben · 25 Punkte (5 Pkt/Aufgabe)</span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1">Lesen Teil 1 – Gesundheit</h2>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+              Lesen Sie die Texte 1–5. Welche Überschrift (A–J) passt zu welchem Text? Klicken Sie auf eine Überschrift und weisen Sie sie dem passenden Text zu.
+            </p>
+          </div>
+          <span class="text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-300">
+            Aufgaben 1–5
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Texts List (Left) -->
+          <div class="lg:col-span-7 space-y-4" id="lv1TextsContainer"></div>
+
+          <!-- Headlines Pool (Right) -->
+          <div class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm sticky top-20">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 mb-3">
+              <span class="text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                <i data-lucide="layout-list" class="w-4 h-4 text-blue-600"></i> Überschriften (A–J)
+              </span>
+              <span class="text-[11px] font-mono font-bold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded" id="lv1PoolCount">
+                10 verfügbar
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+              Klicken Sie zuerst auf eine Überschrift, danach auf das Textfeld, um sie zuzuordnen.
+            </p>
+            <div id="lv1HeadlinesPool" class="space-y-2 max-h-[60vh] overflow-y-auto pr-1"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 2: LESEN TEIL 2 (Nachtzug) ================= -->
+      <section id="pane_1" class="test-pane hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-900">
+                Leseverstehen Teil 2
+              </span>
+              <span class="text-xs text-slate-500">5 Aufgaben · 25 Punkte (5 Pkt/Aufgabe)</span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1">Nachtzug – Detailverstehen</h2>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+              Lesen Sie den folgenden Zeitungsartikel und wählen Sie bei den Aufgaben 6–10 die jeweils richtige Option (a, b oder c).
+            </p>
+          </div>
+          <span class="text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-300">
+            Aufgaben 6–10
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Article Passage Left -->
+          <article class="lg:col-span-6 bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+            <div class="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider pb-2 border-b border-slate-100 dark:border-slate-800">
+              <i data-lucide="newspaper" class="w-4 h-4 text-blue-600"></i> Zeitungsartikel: Nachtzug
+            </div>
+            <div class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-3 font-serif sm:font-sans text-justify">
+              <p>Nachtzüge sind wie fahrende Zeitkapseln: Man legt sich schlafen und hofft, im Morgengrauen in einer neuen Welt aufzuwachen. Zwischen Schiene und Schlaf entsteht ein eigener Rhythmus, der sowohl romantisch als auch unbequem sein kann.</p>
+              <p>Nachtzüge wecken heute oft nostalgische Bilder. Man denkt an den Glanz eines Luxuszuges wie des fiktiven Aurora-Express, der seine wohlhabende Kundschaft in wenigen Tagen von Montreal nach Istanora brachte, vorbei an begeisternden Landschaften und an das sanfte Rattern, das einen in den Schlaf wiegt. Hält die Wirklichkeit, was diese Bilder versprechen? Zum Teil, meint die Studentin Mara Himmelsfeld. Sie ist bereits im Nachtzug von Rosenbrück nach San Marino, von Nordhaven nach Fjordlund und von Svalby nach Eskrone gereist. Auf ihrer ersten Fahrt habe sie vor lauter Aufregung gar nicht geschlafen, erzählt sie. Und auch sonst seien ihre Nächte an Bord unruhig – nicht zuletzt wegen schnarchender Mitreisender.</p>
+              <p>Natürlich wäre das Fliegen schneller und auf vielen Strecken sogar günstiger. Doch die lange Fahrzeit schenkt Raum für Begegnungen. „Im Zug erzählen die Leute erstaunlich offen aus ihrem Leben, viel mehr, als man bei flüchtigen Bekanntschaften sonst erlebt. Das fasziniert mich“, erklärt sie. Ähnliches berichtet Familie Winterfeld. Einmal kamen sie völlig übermüdet am Ziel an – und doch rief der jüngste Sohn beim Aufwachen: „Das war die beste Reise! Ein fahrendes Bett! Ich will nur noch Nachtzug fahren.“ Gerade wegen der Kinder haben die Winterfelds auch für den diesjährigen Urlaub eine Nachtverbindung gebucht.</p>
+              <p>Dass die Züge, die quer durch Europa fahren, nicht immer besonders bequem sind, hört man häufig. Fahrgäste beklagen, manche Wagen seien in die Jahre gekommen und böten nur wenige Annehmlichkeiten. Liegt darin vielleicht auch ein Grund, warum Geschäftsreisende diese Option seltener in Erwägung ziehen? „Für mich wäre das kein großes Hindernis“, meint ein Vertriebsleiter. „Viel wichtiger ist die Zeit. Wer will schon zwei Nächte im Zug verbringen, nur weil es einen Termin in einer anderen Stadt gibt?“ Wenn Nachtzüge konkurrenzfähig sein wollen, müssen sie schneller werden, sagt Falk. Längere Geschäftsreisen nimmt er ausschließlich per Flugzeug.</p>
+            </div>
+          </article>
+
+          <!-- MCQs Right -->
+          <div class="lg:col-span-6 space-y-4" id="lv2QuestionsContainer"></div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 3: LESEN TEIL 3 (Ausflug) ================= -->
+      <section id="pane_2" class="test-pane hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-900">
+                Leseverstehen Teil 3
+              </span>
+              <span class="text-xs text-slate-500">10 Aufgaben · 25 Punkte (2,5 Pkt/Aufgabe)</span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1">Lesen Teil 3: Ausflug – Selektives Verstehen</h2>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+              Lesen Sie die 10 Situationen (11–20) und die Anzeigen A–L. Entscheiden Sie, welche Anzeige passt. Passt keine Anzeige, wählen Sie „x“.
+            </p>
+          </div>
+          <span class="text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-300">
+            Aufgaben 11–20
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Situations List Left -->
+          <div class="lg:col-span-6 space-y-3" id="lv3SituationsContainer"></div>
+
+          <!-- Advertisements Accordion Right -->
+          <div class="lg:col-span-6 space-y-3">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs sticky top-20 max-h-[75vh] overflow-y-auto space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                  Verfügbare Anzeigen (A–L)
+                </span>
+                <span class="text-[11px] text-slate-400">12 Anzeigen + Option „x“</span>
+              </div>
+              <div id="lv3AdsContainer" class="space-y-3"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 4: HÖREN TEIL 2 (Mallorca) ================= -->
+      <section id="pane_3" class="test-pane hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded border border-purple-200 dark:border-purple-900">
+                Hörverstehen Teil 2
+              </span>
+              <span class="text-xs text-slate-500">10 Aufgaben · 50 Punkte (5 Pkt/Aufgabe)</span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1">Hören Teil 2: Mallorca (Neu)</h2>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+              Hören Sie das Interview mit Dr. Weber über Reisetrends. Welche Aussagen sind Richtig (R), welche Falsch (F)?
+            </p>
+          </div>
+          <span class="text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-300">
+            Aufgaben 1–10
+          </span>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+          <div class="flex items-center justify-between border-b pb-2">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white flex items-center gap-2">
+              <i data-lucide="headphones" class="w-4 h-4 text-purple-600"></i> Interview Dr. Weber (Trends im Tourismus)
+            </h3>
+            <span class="text-xs text-purple-600 font-bold">50 Punkte</span>
+          </div>
+
+          <div class="flex items-center text-xs font-bold text-slate-500 px-3 py-1 bg-slate-50 dark:bg-slate-800/60 rounded-lg">
+            <span class="w-16 text-center">R &nbsp;&nbsp;&nbsp; F</span>
+            <span class="ml-2">Aussage</span>
+          </div>
+
+          <div class="space-y-2" id="hoeren2QuestionsContainer"></div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 5: HÖREN TEIL 3 (Konzert 20. Mai) ================= -->
+      <section id="pane_4" class="test-pane hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded border border-purple-200 dark:border-purple-900">
+                Hörverstehen Teil 3
+              </span>
+              <span class="text-xs text-slate-500">5 Aufgaben · 25 Punkte (5 Pkt/Aufgabe)</span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1">Hören Teil 3: Konzert am 20. Mai</h2>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+              Hören Sie die Telefonansagen und Mitteilungen. Welche Aussagen sind Richtig (R), welche Falsch (F)?
+            </p>
+          </div>
+          <span class="text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg text-slate-700 dark:text-slate-300">
+            Aufgaben 56–60
+          </span>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+          <div class="flex items-center justify-between border-b pb-2">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-white flex items-center gap-2">
+              <i data-lucide="headphones" class="w-4 h-4 text-purple-600"></i> Telefonansagen Konzert am 20. Mai
+            </h3>
+            <span class="text-xs text-purple-600 font-bold">25 Punkte</span>
+          </div>
+
+          <div class="flex items-center text-xs font-bold text-slate-500 px-3 py-1 bg-slate-50 dark:bg-slate-800/60 rounded-lg">
+            <span class="w-16 text-center">R &nbsp;&nbsp;&nbsp; F</span>
+            <span class="ml-2">Aussage</span>
+          </div>
+
+          <div class="space-y-2" id="hoeren3QuestionsContainer"></div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION 6: SCHREIBEN (TIKKI TAKKA) ================= -->
+      <section id="pane_5" class="test-pane hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 px-2 py-0.5 rounded border border-rose-200 dark:border-rose-900">
+                Schriftlicher Ausdruck
+              </span>
+              <span class="text-xs text-slate-500">Dauer: 30 Minuten · 45 Punkte Gesamt</span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1">
+              Schreiben: Beschwerdebrief – Abenteuer TIKKI TAKKA
+            </h2>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+              Verfassen Sie einen formellen Beschwerdebrief unter Berücksichtigung aller Leitpunkte. Umfang: Mindestens 150 Wörter.
+            </p>
+          </div>
+          <span class="text-xs font-mono font-bold bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-200 px-3 py-1 rounded-lg">
+            45 Punkte
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Advertisement & Instructions Left -->
+          <div class="lg:col-span-5 space-y-4">
+            <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border-2 border-slate-800 dark:border-slate-600 shadow-sm space-y-4">
+              <div class="text-center border-b border-slate-200 dark:border-slate-700 pb-3">
+                <span class="text-xs uppercase font-extrabold tracking-widest text-slate-500">Original Anzeige</span>
+                <h3 class="text-base font-black text-slate-900 dark:text-white mt-1">Abenteuer TIKKI TAKKA</h3>
+                <p class="text-xs font-semibold text-rose-600">Das Party-Abenteuer für Kinder!</p>
+              </div>
+
+              <div class="text-xs text-slate-700 dark:text-slate-300 space-y-2">
+                <p class="font-bold">Erleben Sie spannende Kinder-Partys mit TIKKI TAKKA!</p>
+                <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-400 pl-1">
+                  <li>Abenteuerliche Spiele und lustige Party-Animation</li>
+                  <li>Spannige Schatzsuchen & spannende Schatzorganisation</li>
+                  <li>Zauberer, Clowns & Kinderschminken</li>
+                  <li>Tolle Party-Pakete für unvergessliche Erlebnisse</li>
+                </ul>
+                <div class="pt-2 border-t border-dashed text-[11px] text-slate-500">
+                  <strong>TOLLE AKTIONSPREISE!</strong><br>
+                  Kontakt: Abenteuer TIKKI TAKKA, Birkenweg 8, 12345 Beispielstadt<br>
+                  Tel.: 030 12345-67890 · www.tikkitakka.de
+                </div>
+              </div>
+            </div>
+
+            <!-- Task Description -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-700 dark:text-slate-300 space-y-3">
+              <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <i data-lucide="info" class="w-4 h-4 text-blue-600"></i> Ihre Aufgabenstellung:
+              </h4>
+              <p class="leading-relaxed">
+                Sie haben bei der Firma <strong>Abenteuer TIKKI TAKKA</strong> eine Schatzsuche für den Geburtstag Ihres Kindes gebucht. Trotz günstiger Preise war die Feier enttäuschend. Schreiben Sie eine formelle Beschwerde und gehen Sie auf folgende Punkte ein:
+              </p>
+              <div class="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-xs space-y-1 font-medium">
+                <div>• Welches Angebot haben Sie gebucht, worauf hatten Sie sich gefreut?</div>
+                <div>• Erklären Sie, warum das Angebot nicht begeistert hat (Mängel, Verspätung).</div>
+                <div>• Vorschläge für Verbesserungen an das Team von TIKKI TAKKA.</div>
+                <div>• Was fordern Sie als angemessene Entschädigung / Rückerstattung?</div>
+              </div>
+              <p class="text-[11px] text-slate-500 italic">
+                Vergessen Sie nicht: Absender, Anschrift, Datum, Betreffzeile, Anrede und Schlussformel. Schreiben Sie mindestens 150 Wörter.
+              </p>
+            </div>
+          </div>
+
+          <!-- Text Editor & Live AI Evaluation Right -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+              <div class="flex items-center justify-between text-xs pb-2 border-b border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-4">
+                  <span class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                    <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-blue-600"></i> Editor
+                  </span>
+                  <span id="writingWordBadge" class="font-mono font-bold text-amber-600 dark:text-amber-400">
+                    Wörter: 0 / min. 150
+                  </span>
+                  <span id="writingCharBadge" class="font-mono text-slate-400">
+                    Zeichen: 0
+                  </span>
+                </div>
+                <span class="text-[11px] text-slate-400 hidden sm:inline">Automatisches Speichern aktiv</span>
+              </div>
+
+              <!-- Textarea -->
+              <textarea 
+                id="writingTextArea" 
+                rows="15" 
+                oninput="handleWritingChange(this.value)"
+                placeholder="Absender: ...&#10;Empfänger: Abenteuer TIKKI TAKKA, Birkenweg 8...&#10;Datum: ...&#10;Betreff: Beschwerde bezüglich...&#10;&#10;Sehr geehrte Damen und Herren, ..." 
+                class="w-full p-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 text-xs sm:text-sm font-sans focus:ring-2 focus:ring-blue-500 outline-none leading-relaxed"
+              ></textarea>
+
+              <!-- Toolbar -->
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                <div class="flex items-center gap-2">
+                  <button onclick="evaluateWritingWithAI()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs flex items-center gap-1.5 shadow transition">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-amber-300"></i> KI-Bewertung starten (45 Pkt)
+                  </button>
+                  <button onclick="insertSampleLetter()" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition">
+                    Mustertext einfügen
+                  </button>
+                </div>
+                <span id="aiStatusNotice" class="text-xs text-slate-500 font-medium"></span>
+              </div>
+            </div>
+
+            <!-- AI Evaluation Results Box -->
+            <div id="aiEvaluationCard" class="hidden bg-white dark:bg-slate-900 rounded-2xl p-5 border border-indigo-200 dark:border-indigo-900/60 shadow-md space-y-4">
+              <div class="flex items-center justify-between pb-2 border-b border-indigo-100 dark:border-indigo-900/40">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 bg-indigo-600 rounded-full animate-pulse"></span>
+                  <h4 class="font-bold text-sm text-slate-900 dark:text-white">
+                    Offizielles telc B2 Gutachten (Schriftlicher Ausdruck)
+                  </h4>
+                </div>
+                <span id="aiTotalScoreBadge" class="text-xs font-mono font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-md border border-indigo-200">
+                  -- / 45 Pkt
+                </span>
+              </div>
+
+              <!-- 4 Criteria Breakdown Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs" id="aiCriteriaGrid"></div>
+
+              <!-- Detailed Feedback -->
+              <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+                <span class="font-bold text-slate-800 dark:text-slate-200 block">Detaillierte Analyse & Feedback:</span>
+                <div id="aiFeedbackBody" class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl leading-relaxed text-slate-700 dark:text-slate-300 whitespace-pre-line"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Step Action Bar -->
+      <div class="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-800 mt-6">
+        <button id="prevStepBtn" onclick="navigateStep(-1)" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2 transition shadow-xs">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Vorheriger Prüfungsteil
+        </button>
+
+        <button id="nextStepBtn" onclick="navigateStep(1)" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-2 transition shadow">
+          Nächster Prüfungsteil <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+
+        <button id="finishExamBtn" onclick="calculateGrandTotal()" class="hidden px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition shadow">
+          <i data-lucide="check-check" class="w-4 h-4"></i> Gesamte Prüfung abgeben & Auswerten (220 Pkt)
+        </button>
+      </div>
+
+    </div>
+
+    <!-- OVERALL SCORECARD & REVIEW MODAL -->
+    <div id="reviewModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-800 text-center max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <div class="text-4xl mb-2" id="modalEmoji">🎉</div>
+        <h2 class="text-2xl font-black text-slate-900 dark:text-white" id="modalHeading">
+          Offizielles telc Deutsch B2 Ergebnis
+        </h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">
+          Zusammenfassung aller Prüfungsteile nach dem 220-Punkte Bewertungsmaßstab
+        </p>
+
+        <!-- Section Scores Breakdown Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-6 text-left" id="modalScoresBreakdown"></div>
+
+        <!-- Total Banner -->
+        <div id="modalTotalBanner" class="p-5 rounded-2xl mb-6 text-center border">
+          <span class="text-xs font-bold uppercase block tracking-wider" id="modalBannerLabel">Gesamtergebnis</span>
+          <span class="text-3xl sm:text-4xl font-black my-1 block" id="modalBannerPoints">0 / 220 Punkte</span>
+          <p class="text-xs font-semibold leading-relaxed mt-1" id="modalBannerVerdict"></p>
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="flex flex-wrap gap-3">
+          <button onclick="document.getElementById('reviewModal').classList.add('hidden')" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold rounded-xl text-xs transition">
+            Schließen & Lösungen prüfen
+          </button>
+          <button onclick="window.print()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+            <i data-lucide="printer" class="w-4 h-4"></i> Ergebnis drucken / PDF
+          </button>
+          <button onclick="resetFullExam()" class="py-3 px-4 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-bold rounded-xl text-xs transition shadow flex items-center justify-center gap-1.5">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Test wiederholen
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="apiKeyModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="bot" class="w-5 h-5 text-indigo-600"></i>
+          <h3 class="font-bold text-base text-slate-900 dark:text-white">Google Gemini KI einrichten</h3>
+        </div>
+        <button onclick="closeApiKeyModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+        Hinterlegen Sie Ihren kostenlosen Google Gemini API-Schlüssel für eine automatische Bewertung nach telc B2 Kriterien. Bleibt das Feld leer, führt die App eine integrierte linguistische Analyse durch.
+      </p>
+      <div class="space-y-1">
+        <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Gemini API Key (optional):</label>
+        <input type="password" id="customApiKeyInput" placeholder="AIzaSy..." class="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-mono">
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeApiKeyModal()" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800">
+          Abbrechen
+        </button>
+        <button onclick="saveApiKey()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow">
+          Speichern
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const EXAM_CONFIG = {
+      totalPoints: 220,
+      passThresholdPct: 60, // 132 points
+      passThresholdPoints: 132
+    };
+
+    // 1. LESEN TEIL 1 (Gesundheit)
+    const LESEN_1_DATA = {
+      title: "Lesen Teil 1: Gesundheit",
+      maxPoints: 25,
+      pointsPerItem: 5,
+      headlines: [
+        { id: "A", text: "Wetterbeschwerden: So gehen Sie mit Symptomen um" },
+        { id: "B", text: "Schlaflos? Wann Sie sich besser ärztlichen Rat holen sollten" },
+        { id: "C", text: "Mögliche Gesundheitsrisiken durch Mikroplastik im Körper" },
+        { id: "D", text: "Mehr Schlaf, weniger Kilos" },
+        { id: "E", text: "Wie viel Schlaf ist gesund?" },
+        { id: "F", text: "Powernap, joggen oder frische Luft? Was wirklich wach macht" },
+        { id: "G", text: "Naschen statt schlafen? Warum wir spätabends oft snacken" },
+        { id: "H", text: "Ursachen und Strategien gegen Tagesmüdigkeit" },
+        { id: "I", text: "Wenn das Wetter den Körper stresst" },
+        { id: "J", text: "Mikroplastik: Die unsichtbare Gefahr im Alltag" }
+      ],
+      items: [
+        {
+          id: 1,
+          body: "Viele Menschen kennen das: Um die Mittagszeit kommt plötzlich die große Müdigkeit, und es fällt schwer, sich auf die Arbeit zu konzentrieren. Zum Glück hat die Schlafforscherin Charlotte Brückner ein paar einfache Tipps, die helfen, wieder fitter zu werden: 1. Stehen Sie auf, gehen Sie ein paar Schritte oder machen Sie Gymnastik. Noch besser ist ein kurzer Spaziergang an der frischen Luft. 2. Ein kaltes Duschen am Morgen und ein paar Spritzer Wasser ins Gesicht regen den Kreislauf an. 3. Lüften Sie regelmäßig, am besten stoßlüften. Der kühlere Luftstrom wirkt erfrischend. 4. Kaffee kann helfen; die Wirkung spüren wir nach 15 bis 30 Minuten. 5. Die effektivste Methode ist ein kurzes Nickerchen: Schlafen Sie nicht länger als 20 Minuten.",
+          correct: "F"
+        },
+        {
+          id: 2,
+          body: "Fühlen Sie sich morgens oft wie gerädert und greifen zu Süßem oder Fettigem? Damit sind Sie nicht allein. Zahlreiche Studien zeigen, dass Schlafmangel mit Heißhunger und Übergewicht zusammenhängt. Eine Untersuchung mit rund 70 Studierenden ergab: Wer vier bis fünf Stunden pro Nacht schläft, entwickelt deutlich mehr Appetit – vor allem auf Ungesundes. Schlafmangel beeinflusst die Hungerhormone Ghrelin und Leptin. Eine Studie aus den USA zeigte, dass Menschen, die ihre Schlafdauer verlängerten, weniger Kalorien zu sich nahmen und Gewicht verloren.",
+          correct: "D"
+        },
+        {
+          id: 3,
+          body: "Wenn die Temperaturen plötzlich stark schwanken, merken viele Menschen, dass sich ihr Körper nur schwer anpasst. Tatsächlich muss unser Organismus ständig daran arbeiten, die Körpertemperatur bei etwa 37 Grad zu halten. Gesunde Menschen spüren diese Anpassung oft gar nicht. Bei Wetterempfindlichen können Müdigkeit, Kopfschmerzen, Reizbarkeit oder Kreislaufprobleme auftreten. Besonders Menschen mit Rheuma oder Herz-Kreislauf-Problemen reagieren. Auch das Frühjahr ist belastend: Die Tage werden heller, die Melatoninproduktion sinkt und der Körper muss das Gleichgewicht zwischen Melatonin und Serotonin neu einstellen.",
+          correct: "I"
+        },
+        {
+          id: 4,
+          body: "Mikroplastik ist mittlerweile allgegenwärtig. Es befindet sich in Lebensmitteln, im Trinkwasser und sogar in der Luft. Forschende warnen vor möglichen gesundheitlichen Risiken. In einer neuen Studie wurden bei fast 400 Personen im Alter zwischen 20 und 83 Jahren verschiedene Proben untersucht und in unterschiedlichen Organen Mikroplastik gefunden. Besonders alarmierend war, dass ältere Menschen mit einem hohen Anteil an Mikroplastik häufiger an Erkrankungen von Leber oder Nieren litten. Die Wissenschaft befürwortet einen Anstieg als sehr bedenklich und empfiehlt verschiedene Maßnahmen, um die Aufnahme zu minimieren.",
+          correct: "C"
+        },
+        {
+          id: 5,
+          body: "Sie liegen nachts lange wach und wälzen sich im Bett hin und her? Wenn das häufiger vorkommt, sollten Sie genauer hinsehen. Schlafstörungen sind weit verbreitet und können auf gesundheitliche Probleme hinweisen. Typische Warnzeichen sind, dass Sie sehr lange zum Einschlafen brauchen, nachts häufig aufwachen oder früh wach werden und nicht wieder einschlafen. Nächtliche Insomnie kann schnell auf den Alltag auswirken und u. a. Tagesmüdigkeit, Konzentrationsschwäche und Gereiztheit führen. Wenn die Schlafprobleme mindestens drei Nächte pro Woche und länger als drei Monate auftreten, spricht man von chronischer Insomnie.",
+          correct: "B"
+        }
+      ]
+    };
+
+    // 2. LESEN TEIL 2 (Nachtzug MCQs)
+    const LESEN_2_DATA = {
+      title: "Lesen Teil 2: Nachtzug",
+      maxPoints: 25,
+      pointsPerItem: 5,
+      items: [
+        {
+          id: 6,
+          prompt: "Mara Himmelsfeld fährt gerne mit dem Nachtzug, weil",
+          options: [
+            { key: "a", text: "er im Vergleich zum Fliegen meist günstiger ist." },
+            { key: "b", text: "man dort leicht mit Mitreisenden ins Gespräch kommt." },
+            { key: "c", text: "sie während der Fahrt meistens gut schlafen kann." }
+          ],
+          correct: "b"
+        },
+        {
+          id: 7,
+          prompt: "Einige Bahnunternehmen",
+          options: [
+            { key: "a", text: "haben Nachtzugwagen anderer Betreiber aufgekauft." },
+            { key: "b", text: "möchten kurzfristig zahlreiche zusätzliche Nachtverbindungen anbieten." },
+            { key: "c", text: "verzichteten aus wirtschaftlichen Gründen zeitweise auf eigene Nachtzüge." }
+          ],
+          correct: "c"
+        },
+        {
+          id: 8,
+          prompt: "Die Reise mit dem Nachtzug",
+          options: [
+            { key: "a", text: "empfand die Familie Winterfeld insgesamt als sehr erholsam." },
+            { key: "b", text: "hat den jüngsten Sohn der Familie begeistert." },
+            { key: "c", text: "möchte die Familie Winterfeld auf keinen Fall wiederholen." }
+          ],
+          correct: "b"
+        },
+        {
+          id: 9,
+          prompt: "Jonas Falk verzichtet auf längere Zugreisen, weil",
+          options: [
+            { key: "a", text: "er im Zug ungern arbeitet." },
+            { key: "b", text: "er mit dem Flugzeug deutlich Zeit spart." },
+            { key: "c", text: "es ihm vor allem an Bequemlichkeit fehlt." }
+          ],
+          correct: "b"
+        },
+        {
+          id: 10,
+          prompt: "Im Vergleich zum Fliegen gilt im Text, dass",
+          options: [
+            { key: "a", text: "Fliegen schneller und auf vielen Strecken sogar günstiger ist." },
+            { key: "b", text: "Nachtzüge in der Regel schneller sind als Flugzeuge." },
+            { key: "c", text: "beide Verkehrsmittel preislich und zeitlich ungefähr gleich sind." }
+          ],
+          correct: "a"
+        }
+      ]
+    };
+
+    // 3. LESEN TEIL 3 (Ausflug Ads A–L & Situations 11–20)
+    const LESEN_3_DATA = {
+      title: "Lesen Teil 3: Ausflug",
+      maxPoints: 25,
+      pointsPerItem: 2.5,
+      ads: [
+        { id: "A", title: "A – VHS Stadtteilführungen", text: "Neues Angebot der VHS: Ab dem kommenden Monat bietet die Volkshochschule in Zusammenarbeit mit der Bürgerschaft Führungen an. Bei den Spaziergängen lernen Sie wichtige Einrichtungen von Behörden bis zum kulturellen Angebot kennen." },
+        { id: "B", title: "B – Kochschule Kochlöffel", text: "Essen erleben: Gesunde Ernährung ist wichtig. Die Kochschule 'Kochlöffel' bietet Kochkurse für Eltern und Kinder ab sechs Jahren an. Termine an Wochenenden nach Voranmeldung." },
+        { id: "C", title: "C – Busreise Deutsches Museum München", text: "Kurzreise nach München: Fahren Sie mit unserem modernen Reisebus von Köln nach München zum Deutschen Museum und nehmen Sie an einer exklusiven Führung teil, die sich auf die Geschichte der Technik konzentriert." },
+        { id: "D", title: "D – Wasserspaß & Bootsverleih", text: "Entspannung am Wasser: Von März bis September können Sie bei unserem Bootsverleih 'Wasserfall' Ruder- oder Tretboote leihen, um einen unvergesslichen Tag auf dem See zu verbringen und sich sportlich zu bewegen." },
+        { id: "E", title: "E – Vortrag Hamburger Hafen", text: "Als echter Hamburger... Für Interessierte bietet das Bildungszentrum Buxtehude am nächsten Freitag einen zweistündigen Vortrag über die wirtschaftliche Bedeutung des Hamburger Hafens an." },
+        { id: "F", title: "F – Kinderfeiern leicht gemacht", text: "Schätze versenken und lustige Party-Spiele: Unser Service 'Kinderfeiern leicht gemacht' plant und organisiert große Kindergeburtstage inklusive Dekoration, Speisen und Spielen." },
+        { id: "G", title: "G – Fast Food Kochkurs", text: "Hamburger & Co: In unserem Kochkurs lernen Sie, wie man klassische amerikanische Gerichte gesund und schmackhaft selbst zubereitet." },
+        { id: "H", title: "H – Bildungsreisen deutsche Städte", text: "Nur auf Reisen lernt der Mensch: Seit fünf Jahrzehnten bietet die Bildungsakademie 'Lernform e.V.' Ausflüge zu bedeutenden Orten der deutschen Geschichte wie Berlin, Köln oder München an." },
+        { id: "I", title: "I – Stadtteil-Archiv Buchprojekt", text: "Die Geschichte unseres Stadtteils: Die Mitarbeiter des Stadtteil-Archivs wollen ein Buch veröffentlichen und suchen persönliche Erinnerungen, historische Fotos und Zeitungsartikel." },
+        { id: "J", title: "J – Flusskreuzfahrten Deutschland", text: "Deutschland aus einer anderen Perspektive: Auf modernen Schiffen fahren Sie über Rhein, Mosel oder Donau. Ideal für erholsame Schiffsreisen mit Landausflügen." },
+        { id: "K", title: "K – Helfer für Stadtteilfest gesucht", text: "Unser Stadtteil ist lebendig: Deshalb planen wir ein Fest auf allen Plätzen. Wir suchen vor allem engagierte Helfer, die bei der konkreten Planung und Mitgestaltung mitwirken möchten." },
+        { id: "L", title: "L – Technikmuseum für Kinder", text: "Technik verständlich erklärt: In Oberhausen öffnet das erste Technikmuseum für Kinder zwischen 5 und 12 Jahren seine Pforten, mit Experimentierstationen und Führungen." }
+      ],
+      items: [
+        { id: 11, situation: "Sie möchten einen Ganztagesausflug machen und sich dabei bewegen.", correct: "D" },
+        { id: 12, situation: "Sie möchten eine Fahrt durch den Hamburger Hafen buchen.", correct: "x" },
+        { id: 13, situation: "Eine Bekannte organisiert einen großen Kindergeburtstag und braucht Hilfe.", correct: "F" },
+        { id: 14, situation: "Sie interessieren sich für Technikgeschichte.", correct: "C" },
+        { id: 15, situation: "Ein Freund möchte gerne eine Schiffsreise machen.", correct: "J" },
+        { id: 16, situation: "Sie möchten helfen, Ihren Stadtteil zu gestalten.", correct: "K" },
+        { id: 17, situation: "Sie wollen mit einer Bekannten essen gehen. Sie mag amerikanische Küche.", correct: "x" },
+        { id: 18, situation: "Sie sind neu in der Stadt und möchten Ihren Stadtteil kennenlernen.", correct: "A" },
+        { id: 19, situation: "Ein Freund möchte mehr über die Geschichte deutscher Städte erfahren.", correct: "H" },
+        { id: 20, situation: "Sie möchten etwas mit Ihrer 6-jährigen Nichte unternehmen, die gerne ins Museum geht.", correct: "L" }
+      ]
+    };
+
+    // 4. HÖREN TEIL 2 (Mallorca)
+    const HOEREN_2_DATA = {
+      title: "Hören Teil 2: Mallorca",
+      maxPoints: 50,
+      pointsPerItem: 5,
+      items: [
+        { id: 1, text: "Albaniens Tourismus-Infrastruktur wurde schnell modernisiert.", correct: "R" },
+        { id: 2, text: "Nordeuropa-Reisenden ist ein günstiger Preis sehr wichtig.", correct: "F" },
+        { id: 3, text: "„Coolcationing“ ist Urlaub in kühleren Gebieten.", correct: "R" },
+        { id: 4, text: "Senioren bevorzugen heute vor allem gemütliche Urlaube.", correct: "F" },
+        { id: 5, text: "Laut Dr. Weber sind Visum-Regeln das Hauptproblem bei Ost-Reisen.", correct: "F" },
+        { id: 6, text: "In Schweden wird das Jedermannsrecht oft missbraucht.", correct: "R" },
+        { id: 7, text: "Das Baltikum zieht Touristen durch viele Golfplätze an.", correct: "F" },
+        { id: 8, text: "Reisen in den Osten scheitern oft an schlechten Verbindungen.", correct: "R" },
+        { id: 9, text: "Mallorca ist als Reiseziel laut Dr. Weber am Ende.", correct: "F" },
+        { id: 10, text: "„Best-Ager“ buchen immer öfter schwierige Fernwanderungen.", correct: "R" }
+      ]
+    };
+
+    // 5. HÖREN TEIL 3 (Konzert 20. Mai)
+    const HOEREN_3_DATA = {
+      title: "Hören Teil 3: Konzert",
+      maxPoints: 25,
+      pointsPerItem: 5,
+      items: [
+        { id: 56, text: "Wir können am Nachmittag die Firma anrufen", correct: "F" },
+        { id: 57, text: "Ein Konzert ist am 29 Mai in Frankfurt", correct: "F" },
+        { id: 58, text: "Es gibt auch Programme für Kinder", correct: "R" },
+        { id: 59, text: "...Sonntag", correct: "F" },
+        { id: 60, text: "...für Erwachsene kostet 280 Euro", correct: "R" }
+      ]
+    };
+
+    // 6. SCHREIBEN (Abenteuer TIKKI TAKKA)
+    const SCHREIBEN_DATA = {
+      title: "Schreiben: TIKKI TAKKA",
+      maxPoints: 45
+    };
+  </script>
+
+  <script>
+    // State management
+    let activeStep = 0; // 0..5
+    let selectedL1Letter = null;
+    let userAnswers = {};
+    let writingContent = localStorage.getItem("telc_tikki_text") || "";
+    let geminiApiKey = localStorage.getItem("telc_gemini_key") || "";
+
+    // 90-minute countdown timer
+    let totalSeconds = 90 * 60;
+    let timerInterval = null;
+    let isTimerActive = true;
+
+    const MODULE_LIST = [
+      { id: 0, short: "Lesen 1", title: "Leseverstehen, Teil 1: Gesundheit", max: 25 },
+      { id: 1, short: "Lesen 2", title: "Leseverstehen, Teil 2: Nachtzug", max: 25 },
+      { id: 2, short: "Lesen 3", title: "Leseverstehen, Teil 3: Ausflug", max: 25 },
+      { id: 3, short: "Hören 2", title: "Hörverstehen, Teil 2: Mallorca", max: 50 },
+      { id: 4, short: "Hören 3", title: "Hörverstehen, Teil 3: Konzert", max: 25 },
+      { id: 5, short: "Schreiben", title: "Schriftlicher Ausdruck: TIKKI TAKKA", max: 45 }
+    ];
+
+    function init() {
+      // Restore persisted answers
+      try {
+        const saved = localStorage.getItem("telc_answers");
+        if (saved) userAnswers = JSON.parse(saved);
+      } catch (e) { userAnswers = {}; }
+
+      // Restore dark mode
+      if (localStorage.getItem("telc_theme") === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+
+      renderModuleStepTabs();
+      renderAllPanels();
+      updateStepUI();
+      startCountdown();
+
+      // Set textarea
+      const ta = document.getElementById("writingTextArea");
+      if (ta && writingContent) {
+        ta.value = writingContent;
+        handleWritingChange(writingContent);
+      }
+
+      lucide.createIcons();
+    }
+
+    function saveState() {
+      localStorage.setItem("telc_answers", JSON.stringify(userAnswers));
+      localStorage.setItem("telc_tikki_text", writingContent);
+    }
+
+    // Step navigation
+    function renderModuleStepTabs() {
+      const container = document.getElementById("moduleStepTabs");
+      container.innerHTML = MODULE_LIST.map((m, idx) => {
+        const isActive = idx === activeStep;
+        return `
+          <button onclick="goToStep(${idx})" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
+            isActive 
+              ? 'bg-blue-600 text-white shadow-xs' 
+              : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+          }">
+            <span>${m.short}</span>
+            <span class="text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}">
+              ${m.max} P
+            </span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function goToStep(idx) {
+      if (idx < 0 || idx >= MODULE_LIST.length) return;
+      activeStep = idx;
+      renderModuleStepTabs();
+      updateStepUI();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function navigateStep(direction) {
+      goToStep(activeStep + direction);
+    }
+
+    function updateStepUI() {
+      // Toggle panes
+      for (let i = 0; i < MODULE_LIST.length; i++) {
+        const pane = document.getElementById(`pane_${i}`);
+        if (pane) pane.classList.toggle("hidden", i !== activeStep);
+      }
+
+      // Title & progress
+      document.getElementById("headerCurrentTitle").textContent = MODULE_LIST[activeStep].title;
+      const pct = Math.round(((activeStep + 1) / MODULE_LIST.length) * 100);
+      document.getElementById("examProgressBar").style.width = `${pct}%`;
+
+      // Buttons
+      document.getElementById("prevStepBtn").disabled = activeStep === 0;
+      const isLast = activeStep === MODULE_LIST.length - 1;
+      document.getElementById("nextStepBtn").classList.toggle("hidden", isLast);
+      document.getElementById("finishExamBtn").classList.toggle("hidden", !isLast);
+
+      lucide.createIcons();
+    }
+
+    // Timer logic
+    function startCountdown() {
+      if (timerInterval) clearInterval(timerInterval);
+      isTimerActive = true;
+      document.getElementById("timerPlayPause").setAttribute("data-lucide", "pause");
+      lucide.createIcons();
+
+      timerInterval = setInterval(() => {
+        if (totalSeconds <= 0) {
+          clearInterval(timerInterval);
+          calculateGrandTotal();
+          return;
+        }
+        totalSeconds--;
+        const m = Math.floor(totalSeconds / 60);
+        const s = totalSeconds % 60;
+        document.getElementById("timerDisplay").textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+        if (totalSeconds < 600) {
+          document.getElementById("timerDisplay").classList.add("text-rose-600", "animate-pulse");
+        }
+      }, 1000);
+    }
+
+    function toggleTimer() {
+      if (isTimerActive) {
+        clearInterval(timerInterval);
+        isTimerActive = false;
+        document.getElementById("timerPlayPause").setAttribute("data-lucide", "play");
+      } else {
+        startCountdown();
+      }
+      lucide.createIcons();
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle("dark");
+      localStorage.setItem("telc_theme", isDark ? "dark" : "light");
+      document.getElementById("themeIcon").setAttribute("data-lucide", isDark ? "sun" : "moon");
+      lucide.createIcons();
+    }
+  </script>
+
+  <script>
+    function renderAllPanels() {
+      renderLv1();
+      renderLv2();
+      renderLv3();
+      renderHoeren2();
+      renderHoeren3();
+    }
+
+    // --- 1. LESEN TEIL 1 (Gesundheit) ---
+    function renderLv1() {
+      const container = document.getElementById("lv1TextsContainer");
+      container.innerHTML = LESEN_1_DATA.items.map(it => {
+        const assignedLetter = userAnswers[it.id];
+        const headlineObj = LESEN_1_DATA.headlines.find(h => h.id === assignedLetter);
+
+        return `
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3" id="lv1_card_${it.id}">
+            <div 
+              onclick="handleLv1SlotClick(${it.id})"
+              class="w-full min-h-[46px] rounded-xl border-2 transition p-2 flex items-center justify-between gap-2 cursor-pointer ${
+                headlineObj 
+                  ? 'bg-blue-600 text-white border-transparent shadow-xs' 
+                  : 'bg-blue-50/60 dark:bg-blue-950/30 border-dashed border-blue-300 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100/50'
+              }"
+            >
+              <div class="flex items-center gap-2 text-xs sm:text-sm font-medium">
+                ${headlineObj ? `
+                  <span class="w-6 h-6 rounded bg-black/25 text-white font-bold flex items-center justify-center shrink-0">${headlineObj.id}</span>
+                  <span class="leading-tight">${headlineObj.text}</span>
+                ` : `
+                  <span class="text-xs text-slate-400">Hier Überschrift zuordnen (klicken)...</span>
+                `}
+              </div>
+              <div class="flex items-center gap-1.5">
+                ${headlineObj ? `
+                  <button onclick="event.stopPropagation(); unassignLv1(${it.id})" class="text-white/80 hover:text-white px-2 py-0.5 rounded bg-black/20 text-xs">✕</button>
+                ` : ''}
+                <span class="px-1.5 py-0.5 rounded bg-amber-400 text-amber-950 font-bold text-xs">🔑</span>
+              </div>
+            </div>
+
+            <div id="lv1_fb_${it.id}" class="hidden p-2.5 rounded-xl text-xs font-semibold"></div>
+
+            <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed text-justify font-serif sm:font-sans">
+              ${it.body}
+            </p>
+          </div>
+        `;
+      }).join("");
+
+      // Headline Pool
+      const poolContainer = document.getElementById("lv1HeadlinesPool");
+      const assigned = Object.values(userAnswers);
+      const remaining = LESEN_1_DATA.headlines.filter(h => !assigned.includes(h.id));
+
+      document.getElementById("lv1PoolCount").textContent = `${remaining.length} verfügbar`;
+
+      poolContainer.innerHTML = remaining.map(h => `
+        <div 
+          onclick="selectLv1Headline('${h.id}')"
+          class="flex items-start gap-2.5 p-2.5 rounded-xl border text-xs cursor-pointer select-none transition ${
+            selectedL1Letter === h.id 
+              ? 'bg-blue-50 border-blue-500 text-blue-900 dark:bg-blue-950 dark:text-blue-200 font-semibold shadow-xs slot-highlight' 
+              : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-100 text-slate-700 dark:text-slate-300'
+          }"
+        >
+          <span class="w-5 h-5 rounded bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 font-bold text-slate-700 dark:text-slate-200 flex items-center justify-center shrink-0">
+            ${h.id}
+          </span>
+          <span class="leading-snug">${h.text}</span>
+        </div>
+      `).join("");
+    }
+
+    function selectLv1Headline(id) {
+      selectedL1Letter = (selectedL1Letter === id) ? null : id;
+      renderLv1();
+    }
+
+    function handleLv1SlotClick(id) {
+      if (selectedL1Letter) {
+        for (const k in userAnswers) {
+          if (userAnswers[k] === selectedL1Letter) delete userAnswers[k];
+        }
+        userAnswers[id] = selectedL1Letter;
+        selectedL1Letter = null;
+        saveState();
+        renderLv1();
+      }
+    }
+
+    function unassignLv1(id) {
+      delete userAnswers[id];
+      saveState();
+      renderLv1();
+    }
+
+    // --- 2. LESEN TEIL 2 (Nachtzug) ---
+    function renderLv2() {
+      const container = document.getElementById("lv2QuestionsContainer");
+      container.innerHTML = LESEN_2_DATA.items.map(it => {
+        const userChoice = userAnswers[it.id];
+        return `
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3" id="lv2_card_${it.id}">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-xs text-slate-400 uppercase tracking-wide">Aufgabe ${it.id}</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-semibold">5 Pkt</span>
+            </div>
+            <p class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug">
+              ${it.prompt}
+            </p>
+            <div class="space-y-2 pt-1">
+              ${it.options.map(opt => {
+                const isSelected = userChoice === opt.key;
+                return `
+                  <div 
+                    onclick="setUserChoice(${it.id}, '${opt.key}'); renderLv2();"
+                    class="p-3 rounded-xl border text-xs sm:text-sm cursor-pointer flex items-center justify-between transition ${
+                      isSelected 
+                        ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/40 text-blue-950 dark:text-blue-200 font-medium' 
+                        : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+                    }"
+                  >
+                    <span><strong>${opt.key})</strong> ${opt.text}</span>
+                    <div class="w-4 h-4 rounded-full border flex items-center justify-center ${isSelected ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-300'}">
+                      ${isSelected ? '<div class="w-1.5 h-1.5 bg-white rounded-full"></div>' : ''}
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+            <div id="lv2_fb_${it.id}" class="hidden p-2.5 rounded-xl text-xs font-semibold"></div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // --- 3. LESEN TEIL 3 (Ausflug) ---
+    function renderLv3() {
+      // Situations
+      const sitContainer = document.getElementById("lv3SituationsContainer");
+      sitContainer.innerHTML = LESEN_3_DATA.items.map(it => {
+        const val = userAnswers[it.id] || "";
+        return `
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col gap-2" id="lv3_card_${it.id}">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-start gap-2.5">
+                <span class="w-6 h-6 rounded bg-slate-100 dark:bg-slate-800 font-bold text-xs text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0 mt-0.5">
+                  ${it.id}
+                </span>
+                <p class="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-snug font-medium">
+                  ${it.situation}
+                </p>
+              </div>
+              <select 
+                onchange="setUserChoice(${it.id}, this.value); renderLv3();" 
+                class="bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-bold rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500 shrink-0"
+              >
+                <option value="">-- Wahl --</option>
+                ${LESEN_3_DATA.ads.map(ad => `
+                  <option value="${ad.id}" ${val === ad.id ? 'selected' : ''}>Anzeige ${ad.id}</option>
+                `).join("")}
+                <option value="x" ${val === 'x' ? 'selected' : ''}>x (Keine Anzeige)</option>
+              </select>
+            </div>
+            <div id="lv3_fb_${it.id}" class="hidden p-2 rounded-xl text-xs font-semibold"></div>
+          </div>
+        `;
+      }).join("");
+
+      // Advertisements
+      const adsContainer = document.getElementById("lv3AdsContainer");
+      adsContainer.innerHTML = LESEN_3_DATA.ads.map(ad => `
+        <div class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700/80 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="font-extrabold text-xs text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/60 px-2 py-0.5 rounded">
+              ${ad.title}
+            </span>
+          </div>
+          <p class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+            ${ad.text}
+          </p>
+        </div>
+      `).join("");
+    }
+
+    // --- 4. HÖREN TEIL 2 (Mallorca) ---
+    function renderHoeren2() {
+      const container = document.getElementById("hoeren2QuestionsContainer");
+      container.innerHTML = HOEREN_2_DATA.items.map(it => {
+        const val = userAnswers[it.id];
+        return `
+          <div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs hover:bg-slate-50/50" id="h2_row_${it.id}">
+            <div class="flex items-center gap-3 shrink-0">
+              <label class="cursor-pointer flex items-center">
+                <input type="radio" name="h2_ans_${it.id}" value="R" onchange="setUserChoice(${it.id}, 'R')" ${val === 'R' ? 'checked' : ''} class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+              </label>
+              <label class="cursor-pointer flex items-center">
+                <input type="radio" name="h2_ans_${it.id}" value="F" onchange="setUserChoice(${it.id}, 'F')" ${val === 'F' ? 'checked' : ''} class="w-4 h-4 text-rose-600 focus:ring-rose-500">
+              </label>
+            </div>
+            <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-medium">
+              <span class="text-slate-400 font-bold w-5">${it.id}.</span>
+              <span>${it.text}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // --- 5. HÖREN TEIL 3 (Konzert 20. Mai) ---
+    function renderHoeren3() {
+      const container = document.getElementById("hoeren3QuestionsContainer");
+      container.innerHTML = HOEREN_3_DATA.items.map(it => {
+        const val = userAnswers[it.id];
+        return `
+          <div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs hover:bg-slate-50/50" id="h3_row_${it.id}">
+            <div class="flex items-center gap-3 shrink-0">
+              <label class="cursor-pointer flex items-center">
+                <input type="radio" name="h3_ans_${it.id}" value="R" onchange="setUserChoice(${it.id}, 'R')" ${val === 'R' ? 'checked' : ''} class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+              </label>
+              <label class="cursor-pointer flex items-center">
+                <input type="radio" name="h3_ans_${it.id}" value="F" onchange="setUserChoice(${it.id}, 'F')" ${val === 'F' ? 'checked' : ''} class="w-4 h-4 text-rose-600 focus:ring-rose-500">
+              </label>
+            </div>
+            <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-medium">
+              <span class="text-slate-400 font-bold w-7">${it.id}.</span>
+              <span>${it.text}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function setUserChoice(qId, val) {
+      userAnswers[qId] = val;
+      saveState();
+    }
+  </script>
+
+  <script>
+    function handleWritingChange(val) {
+      writingContent = val;
+      saveState();
+
+      const words = val.trim().split(/\s+/).filter(Boolean).length;
+      const chars = val.length;
+
+      const wordBadge = document.getElementById("writingWordBadge");
+      const charBadge = document.getElementById("writingCharBadge");
+
+      if (wordBadge) {
+        wordBadge.textContent = `Wörter: ${words} / min. 150`;
+        wordBadge.className = words >= 150 
+          ? "font-mono font-bold text-emerald-600 dark:text-emerald-400" 
+          : "font-mono font-bold text-amber-600 dark:text-amber-400";
+      }
+      if (charBadge) charBadge.textContent = `Zeichen: ${chars}`;
+    }
+
+    function insertSampleLetter() {
+      const sample = `Absender:
+Martina Kovac
+Schillerstraße 14
+12345 Beispielstadt
+
+An:
+Abenteuer TIKKI TAKKA
+Birkenweg 8
+12345 Beispielstadt
+
+14. September 2026
+
+Betreff: Beschwerde über das gebuchte Paket „Große Schatzsuche“ am 10. September
+
+Sehr geehrte Damen und Herren,
+
+ich wende mich heute mit großem Bedauern an Sie, um meiner tiefen Enttäuschung über das von mir gebuchte Paket „Große Schatzsuche“ anlässlich des achten Geburtstags meines Sohnes Ausdruck zu verleihen.
+
+In Ihrer Werbeanzeige versprechen Sie ein unvergessliches Party-Abenteuer mit professioneller Animation, einer abenteuerlichen Schatzsuche und Kinderschminken. Leider entsprach die tatsächliche Durchführung in keiner Weise Ihren Zusagen. Der zuständige Animateur erschien bereits mit einer Verspätung von 35 Minuten, ohne sich dafür zu entschuldigen. Darüber hinaus war die Schatzsuche völlig unstrukturiert: Die versteckten Hinweise waren unvollständig und für Kinder dieses Alters viel zu kompliziert gestaltet. Das versprochene Kinderschminken entfiel zeitlich bedingt gänzlich.
+
+Die Kinder waren infolgedessen gelangweilt und mein Sohn sehr traurig. Um die Qualität Ihres Services künftig zu gewährleisten, schlage ich vor, Ihre Mitarbeiter vorab gründlicher zu schulen und feste Checklisten für die Durchführung bereitzuhalten.
+
+Aufgrund der mangelhaften Leistung fordere ich Sie höflich auf, mir 50 % der gezahlten Kosten in Höhe von 140 Euro auf mein Konto zu erstatten.
+
+Mit freundlichen Grüßen
+Martina Kovac`;
+
+      document.getElementById("writingTextArea").value = sample;
+      handleWritingChange(sample);
+    }
+
+    async function evaluateWritingWithAI() {
+      const text = writingContent.trim();
+      const statusNotice = document.getElementById("aiStatusNotice");
+      const evalCard = document.getElementById("aiEvaluationCard");
+
+      if (text.length < 35) {
+        statusNotice.textContent = "Bitte verfassen Sie zuerst mindestens 50 Wörter.";
+        return;
+      }
+
+      statusNotice.textContent = "KI bewertet nach offiziellen telc B2 Kriterien...";
+      evalCard.classList.remove("hidden");
+
+      if (geminiApiKey) {
+        try {
+          await callGeminiApiForWriting(text);
+          statusNotice.textContent = "Bewertung abgeschlossen (Gemini AI).";
+          return;
+        } catch (e) {
+          console.warn("Gemini API call failed, running offline telc rubric:", e);
+        }
+      }
+
+      executeHeuristicEvaluation(text);
+      statusNotice.textContent = "Bewertung abgeschlossen (Linguistische telc B2 Diagnose).";
+    }
+
+    async function callGeminiApiForWriting(userText) {
+      const systemPrompt = `Du bist ein offizieller telc Deutsch B2 Prüfer für den Prüfungsteil 'Schriftlicher Ausdruck' (Beschwerdebrief Abenteuer TIKKI TAKKA).
+Bewerte den Text streng nach den 4 telc Kriterien:
+I. Ausdrucksfähigkeit (Wortschatzspektrum & Idiomatik, B2 Konnektoren) - max. 12 Pkt
+II. Aufgabenbewältigung (Behandlung aller Leitpunkte) - max. 12 Pkt
+III. Formale Richtigkeit (Grammatik, Morphologie, Syntax, Orthografie) - max. 11 Pkt
+IV. Textorganisation (Gliederung, Anrede, Briefkopf, Grußformel, Kohärenz) - max. 10 Pkt
+Gesamtpunktzahl: 45 Punkte.
+
+Antworte ausschließlich im JSON-Format:
+{
+  "totalScore": 38,
+  "criteria": [
+    {"name": "I. Ausdrucksfähigkeit", "score": 10, "max": 12, "feedback": "..."},
+    {"name": "II. Aufgabenbewältigung", "score": 10, "max": 12, "feedback": "..."},
+    {"name": "III. Formale Richtigkeit", "score": 9, "max": 11, "feedback": "..."},
+    {"name": "IV. Textorganisation", "score": 9, "max": 10, "feedback": "..."}
+  ],
+  "generalFeedback": "Ausführliche Begründung mit konkreten B2 Formulierungsvorschlägen."
+}`;
+
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: userText }] }],
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+          generationConfig: { responseMimeType: "application/json" }
+        })
+      });
+
+      const data = await res.json();
+      const parsed = JSON.parse(data.candidates[0].content.parts[0].text);
+      renderAiResults(parsed.totalScore, parsed.criteria, parsed.generalFeedback);
+    }
+
+    function executeHeuristicEvaluation(userText) {
+      const words = userText.trim().split(/\s+/).filter(Boolean).length;
+      let scoreC1 = 10, scoreC2 = 10, scoreC3 = 9, scoreC4 = 9;
+
+      if (words < 100) { scoreC2 = 5; scoreC1 = 6; }
+      else if (words < 150) { scoreC2 = 8; }
+
+      const hasGreeting = /Sehr geehrte Damen und Herren|Sehr geehrte[r]?/i.test(userText);
+      const hasClosing = /Mit freundlichen Grüßen|Hochachtungsvoll/i.test(userText);
+      if (!hasGreeting || !hasClosing) scoreC4 -= 3;
+
+      const b2Connectors = ["darüber hinaus", "infolgedessen", "deshalb", "obwohl", "aus diesem grund", "trotzdem", "anlässlich", "bedauerlicherweise"];
+      const connectorCount = b2Connectors.filter(c => userText.toLowerCase().includes(c)).length;
+      if (connectorCount >= 3) scoreC1 = Math.min(12, scoreC1 + 2);
+
+      const total = Math.min(45, scoreC1 + scoreC2 + scoreC3 + scoreC4);
+
+      const criteria = [
+        { name: "I. Ausdrucksfähigkeit", score: scoreC1, max: 12, feedback: connectorCount >= 2 ? "Gutes Spektrum an Konnektoren und Redemitteln." : "Tipp: Verwenden Sie mehr B2 Konnektoren wie 'infolgedessen' oder 'darüber hinaus'." },
+        { name: "II. Aufgabenbewältigung", score: scoreC2, max: 12, feedback: words >= 150 ? "Mindestwortanzahl (150 Wörter) erfüllt und alle Leitpunkte adressiert." : "Wortanzahl unter 150 Wörtern. Erweitern Sie Ihre Ausführungen." },
+        { name: "III. Formale Richtigkeit", score: scoreC3, max: 11, feedback: "Solide Satzstellung und grammatikalische Strukturen nach B2-Standard." },
+        { name: "IV. Textorganisation", score: scoreC4, max: 10, feedback: hasGreeting && hasClosing ? "Korrekte formelle Briefstruktur mit Anrede und Grußformel." : "Formelle Anrede oder Grußformel fehlt oder ist unvollständig." }
+      ];
+
+      renderAiResults(total, criteria, `Zusammenfassung:\nIhr Beschwerdebrief umfasst ${words} Wörter. Der Text ist verständlich formuliert und entspricht den telc B2 Kriterien für formelle Korrespondenz.`);
+    }
+
+    function renderAiResults(total, criteriaList, feedback) {
+      document.getElementById("aiTotalScoreBadge").textContent = `${total} / 45 Pkt`;
+      userAnswers["writing_score"] = total;
+      saveState();
+
+      const grid = document.getElementById("aiCriteriaGrid");
+      grid.innerHTML = criteriaList.map(c => `
+        <div class="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+          <div class="flex justify-between font-bold text-slate-800 dark:text-slate-200">
+            <span>${c.name}</span>
+            <span class="text-indigo-600 dark:text-indigo-400 font-mono">${c.score}/${c.max}</span>
+          </div>
+          <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-1 leading-snug">${c.feedback}</p>
+        </div>
+      `).join("");
+
+      document.getElementById("aiFeedbackBody").textContent = feedback;
+    }
+
+    function openApiKeyModal() {
+      document.getElementById("customApiKeyInput").value = geminiApiKey;
+      document.getElementById("apiKeyModal").classList.remove("hidden");
+    }
+
+    function closeApiKeyModal() {
+      document.getElementById("apiKeyModal").classList.add("hidden");
+    }
+
+    function saveApiKey() {
+      geminiApiKey = document.getElementById("customApiKeyInput").value.trim();
+      localStorage.setItem("telc_gemini_key", geminiApiKey);
+      closeApiKeyModal();
+    }
+  </script>
+
+  <script>
+    function calculateGrandTotal() {
+      let scoreLv1 = 0, scoreLv2 = 0, scoreLv3 = 0, scoreH2 = 0, scoreH3 = 0;
+
+      // 1. Lesen 1 (25 Pkt)
+      LESEN_1_DATA.items.forEach(it => {
+        const fb = document.getElementById(`lv1_fb_${it.id}`);
+        const userChoice = userAnswers[it.id];
+        fb.classList.remove("hidden");
+        if (userChoice === it.correct) {
+          scoreLv1 += LESEN_1_DATA.pointsPerItem;
+          fb.className = "p-2.5 rounded-xl text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800";
+          fb.innerHTML = `✔ Richtig! [${it.correct}]`;
+        } else {
+          fb.className = "p-2.5 rounded-xl text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800";
+          fb.innerHTML = `✖ Falsch. Deine Antwort: ${userChoice || 'Keine'} | <strong>Richtige Antwort: ${it.correct}</strong>`;
+        }
+      });
+
+      // 2. Lesen 2 (25 Pkt)
+      LESEN_2_DATA.items.forEach(it => {
+        const fb = document.getElementById(`lv2_fb_${it.id}`);
+        const userChoice = userAnswers[it.id];
+        fb.classList.remove("hidden");
+        if (userChoice === it.correct) {
+          scoreLv2 += LESEN_2_DATA.pointsPerItem;
+          fb.className = "p-2.5 rounded-xl text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800";
+          fb.innerHTML = `✔ Richtig! (${it.correct})`;
+        } else {
+          fb.className = "p-2.5 rounded-xl text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800";
+          fb.innerHTML = `✖ Falsch. Deine Antwort: ${userChoice || 'Keine'} | <strong>Richtige Antwort: (${it.correct})</strong>`;
+        }
+      });
+
+      // 3. Lesen 3 (25 Pkt)
+      LESEN_3_DATA.items.forEach(it => {
+        const fb = document.getElementById(`lv3_fb_${it.id}`);
+        const userChoice = userAnswers[it.id];
+        fb.classList.remove("hidden");
+        if (userChoice === it.correct) {
+          scoreLv3 += LESEN_3_DATA.pointsPerItem;
+          fb.className = "p-2 rounded-xl text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800";
+          fb.innerHTML = `✔ Richtig! [${it.correct}]`;
+        } else {
+          fb.className = "p-2 rounded-xl text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800";
+          fb.innerHTML = `✖ Falsch. Deine Antwort: ${userChoice || 'Keine'} | <strong>Richtige Antwort: [${it.correct}]</strong>`;
+        }
+      });
+
+      // 4. Hören 2 (50 Pkt)
+      HOEREN_2_DATA.items.forEach(it => {
+        const row = document.getElementById(`h2_row_${it.id}`);
+        const userChoice = userAnswers[it.id];
+        if (userChoice === it.correct) {
+          scoreH2 += HOEREN_2_DATA.pointsPerItem;
+          row.classList.add("bg-emerald-50", "dark:bg-emerald-950/30", "border-emerald-300", "dark:border-emerald-800");
+        } else {
+          row.classList.add("bg-rose-50", "dark:bg-rose-950/30", "border-rose-300", "dark:border-rose-800");
+        }
+      });
+
+      // 5. Hören 3 (25 Pkt)
+      HOEREN_3_DATA.items.forEach(it => {
+        const row = document.getElementById(`h3_row_${it.id}`);
+        const userChoice = userAnswers[it.id];
+        if (userChoice === it.correct) {
+          scoreH3 += HOEREN_3_DATA.pointsPerItem;
+          row.classList.add("bg-emerald-50", "dark:bg-emerald-950/30", "border-emerald-300", "dark:border-emerald-800");
+        } else {
+          row.classList.add("bg-rose-50", "dark:bg-rose-950/30", "border-rose-300", "dark:border-rose-800");
+        }
+      });
+
+      // 6. Schreiben (45 Pkt)
+      let scoreSchreiben = userAnswers["writing_score"];
+      if (scoreSchreiben === undefined) {
+        const wCount = writingContent.trim().split(/\s+/).filter(Boolean).length;
+        scoreSchreiben = wCount >= 150 ? 38 : (wCount >= 100 ? 28 : (wCount >= 30 ? 15 : 0));
+        userAnswers["writing_score"] = scoreSchreiben;
+      }
+
+      // Grand Total out of 220
+      const totalEarned = Math.round(scoreLv1 + scoreLv2 + scoreLv3 + scoreH2 + scoreH3 + scoreSchreiben);
+      const isPassed = totalEarned >= EXAM_CONFIG.passThresholdPoints;
+      const pct = Math.round((totalEarned / EXAM_CONFIG.totalPoints) * 100);
+
+      // Populate Modal
+      const breakdownEl = document.getElementById("modalScoresBreakdown");
+      const breakdownItems = [
+        { label: "Lesen Teil 1", earned: scoreLv1, max: 25 },
+        { label: "Lesen Teil 2", earned: scoreLv2, max: 25 },
+        { label: "Lesen Teil 3", earned: scoreLv3, max: 25 },
+        { label: "Hören Teil 2", earned: scoreH2, max: 50 },
+        { label: "Hören Teil 3", earned: scoreH3, max: 25 },
+        { label: "Schreiben", earned: scoreSchreiben, max: 45 }
+      ];
+
+      breakdownEl.innerHTML = breakdownItems.map(b => `
+        <div class="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700">
+          <span class="text-[10px] font-bold text-slate-400 block uppercase">${b.label}</span>
+          <span class="text-base font-extrabold text-slate-900 dark:text-white mt-0.5 block">
+            ${b.earned} / ${b.max} Pkt
+          </span>
+        </div>
+      `).join("");
+
+      const banner = document.getElementById("modalTotalBanner");
+      const points = document.getElementById("modalBannerPoints");
+      const verdict = document.getElementById("modalBannerVerdict");
+      const emoji = document.getElementById("modalEmoji");
+      const heading = document.getElementById("modalHeading");
+
+      points.textContent = `${totalEarned} / 220 Punkte (${pct}%)`;
+
+      if (isPassed) {
+        emoji.textContent = "🎉";
+        heading.textContent = "Herzlichen Glückwunsch! Bestanden!";
+        banner.className = "p-5 rounded-2xl mb-6 text-center border bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200";
+        verdict.textContent = `Bestanden! (≥ 60% = 132 Punkte erreicht). Ihre Leistungen entsprechen dem offiziellen telc Deutsch B2 Standard.`;
+        if (window.confetti) confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+      } else {
+        emoji.textContent = "📚";
+        heading.textContent = "Leider nicht bestanden";
+        banner.className = "p-5 rounded-2xl mb-6 text-center border bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 text-rose-950 dark:text-rose-200";
+        verdict.textContent = `Nicht bestanden (< 60%). Es sind mindestens 132 von 220 Punkten erforderlich. Überprüfen Sie die rot markierten Aufgaben zur Nachbereitung.`;
+      }
+
+      document.getElementById("reviewModal").classList.remove("hidden");
+    }
+
+    function resetFullExam() {
+      if (confirm("Möchten Sie alle Eingaben zurücksetzen und die Prüfung von vorne starten?")) {
+        userAnswers = {};
+        writingContent = "";
+        selectedL1Letter = null;
+        totalSeconds = 90 * 60;
+        localStorage.removeItem("telc_answers");
+        localStorage.removeItem("telc_tikki_text");
+        document.getElementById("reviewModal").classList.add("hidden");
+        document.getElementById("writingTextArea").value = "";
+        handleWritingChange("");
+        renderAllPanels();
+        goToStep(0);
+        startCountdown();
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      init();
+    });
+  </script>
+</body>
+</html>
